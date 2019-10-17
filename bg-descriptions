@@ -1,0 +1,30 @@
+from bs4 import BeautifulSoup
+import pandas as pd
+import numpy as np
+import requests
+
+url = r"https://boardgamegeek.com/boardgame/174430/gloomhaven"
+page_data = requests.get(url)
+soup = BeautifulSoup(page_data.content, 'html.parser')
+soup
+
+data = pd.read_csv(r'C:\Users\Nut sack\Desktop\board games\2019-07-08.csv')
+
+urls = data['URL']
+urls.head()
+
+
+up1 = r"https://boardgamegeek.com"
+n = 0
+desc = []
+for u in urls:
+    url = up1 + urls[n]
+    print(url)
+    d = requests.get(url)
+    d.content
+    soup = BeautifulSoup(d.content, 'html.parser')
+    description = soup.find("meta",  property="og:description")
+    (desc.append(description["content"]) if description else desc.append("No meta description given"))
+    n+=1
+data['description'] = desc
+
